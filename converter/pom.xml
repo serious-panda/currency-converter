@@ -50,10 +50,17 @@
             <version>20160212</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.heroku.sdk</groupId>
+            <artifactId>heroku-maven-plugin</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
     </dependencies>
 
     <properties>
         <java.version>1.8</java.version>
+        <heroku.appName>mrpanda</heroku.appName>
     </properties>
 
 
@@ -62,6 +69,21 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>1.0.3</version>
+                <configuration>
+                    <appName>${heroku.appName}</appName>
+                    <processTypes>
+                        <web>java -jar ${project.artifactId}-${project.version}.jar</web>
+                    </processTypes>
+                    <includeTarget>false</includeTarget>
+                    <includes>
+                        <include>target/${project.artifactId}-${project.version}.jar</include>
+                    </includes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
