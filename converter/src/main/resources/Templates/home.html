@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+
+<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+
+<p th:text="'Convert:'" />
+
+<form action="#" th:action="@{/home}" th:object="${conversionQuery}" method="post">
+
+    <table>
+        <tr>
+            <th>Convert</th>
+            <th></th>
+            <th>To</th>
+            <th></th>
+        </tr>
+        <tr>
+            <td><input type="text" th:field="*{amount}" /></td>
+
+            <td>
+            <select th:field="*{from}">
+                <option th:each="dropDownItem : ${currencies}"
+                        th:value="${dropDownItem.key}"
+                        th:text="${dropDownItem.key} + ' - ' + ${dropDownItem.value}" />
+            </select>
+            </td>
+            <td>
+                <select th:field="*{to}">
+                    <option th:each="dropDownItem : ${currencies}"
+                            th:value="${dropDownItem.key}"
+                            th:text="${dropDownItem.key} + ' - ' + ${dropDownItem.value}" />
+                </select>
+            </td>
+            <td><input type="text" th:field="*{date}" /></td>
+            <td><input type="submit" value="Convert" /></td>
+        </tr>
+        <tr>
+            <td th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Invalid amount</td>
+        </tr>
+        <tr>
+            <td th:if="${#fields.hasErrors('from')}" th:errors="*{from}">Invalid 'from' currency</td>
+        </tr>
+        <tr>
+            <td th:if="${#fields.hasErrors('to')}" th:errors="*{to}">Invalid 'to' currency</td>
+        </tr>
+        <tr>
+            <td th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Invalid date</td>
+        </tr>
+    </table>
+</form>
+
+<div th:if="${result != null}">
+    <p th:text="${result.query.amount} + ' ' + ${result.query.from} + ' = ' + ${result.result} + ' ' + ${result.query.to}" />
+</div>
+
+<div th:if="${not #lists.isEmpty(history)}">
+    <h2>History</h2>
+    <table>
+        <tr>
+            <td>Timestamp</td>
+            <td>From</td>
+            <td>To</td>
+            <td>Amount</td>
+            <td>Result</td>
+            <td>Date</td>
+        </tr>
+        <tr th:each="entry : ${history}">
+            <td th:text="${entry.timestamp}"></td>
+            <td th:text="${entry.queryResult.query.from}"></td>
+            <td th:text="${entry.queryResult.query.to}"></td>
+            <td th:text="${entry.queryResult.query.amount}"></td>
+            <td th:text="${entry.queryResult.result}"></td>
+            <td th:text="${entry.queryResult.query.date}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
