@@ -77,7 +77,7 @@
                 <configuration>
                     <appName>${heroku.appName}</appName>
                     <processTypes>
-                        <web>java -jar ${project.artifactId}-${project.version}.jar</web>
+                        <web>java -jar ${project.artifactId}-${project.version}.jar --server.port=$PORT</web>
                     </processTypes>
                     <includeTarget>false</includeTarget>
                     <includes>
