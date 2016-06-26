@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <defaultCache eternal="true" maxElementsInMemory="1000" overflowToDisk="false" />
+    <cache name="liveRates"
+           maxElementsInMemory="1000"
+           timeToIdleSeconds="${rates.cache.ttl}"
+           timeToLiveSeconds="${rates.cache.ttl}"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="LFU" />
+</ehcache>

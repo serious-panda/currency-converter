@@ -29,9 +29,9 @@ public class HomeController {
     QueryHistory queryHistory;
 
     HomeController(){
-        currencies.put("AAA", "dfdsfdsfd");
-        currencies.put("BBB", "4353456345");
-        currencies.put("CCC", "sdfsd 4334 34 dfsd");
+        currencies.put("USD", "dfdsfdsfd");
+        currencies.put("CAD", "4353456345");
+        currencies.put("EUR", "sdfsd 4334 34 dfsd");
     }
 
     @RequestMapping("/home")
