@@ -1,4 +1,4 @@
-package com.dima.converter.service;
+package com.dima.converter.service.converter;
 
 import com.dima.converter.utils.UrlClient;
 import com.fasterxml.jackson.databind.JsonNode;

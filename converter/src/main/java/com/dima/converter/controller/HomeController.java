@@ -2,8 +2,8 @@ package com.dima.converter.controller;
 
 import com.dima.converter.model.ConversionQuery;
 import com.dima.converter.model.QueryResult;
-import com.dima.converter.service.ConversionService;
-import com.dima.converter.service.QueryHistory;
+import com.dima.converter.service.converter.ConversionService;
+import com.dima.converter.service.converter.QueryHistory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class HomeController implements ResourceLoaderAware {
     @Autowired
     private QueryHistory queryHistory;
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     @RequestMapping("/home")
     public String mainPage(ConversionQuery conversionQuery, Model model) {
 
@@ -50,7 +50,7 @@ public class HomeController implements ResourceLoaderAware {
         return "home";
     }
 
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/home", method = RequestMethod.POST)
     public String query(@Valid ConversionQuery conversionQuery, Model model, BindingResult bindingResult) {
 

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Getting Started: Serving Web Content</title>
+    <title>Currency Converter - Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
@@ -66,18 +66,16 @@
     <table>
         <tr>
             <td>Timestamp</td>
-            <td>From</td>
-            <td>To</td>
-            <td>Amount</td>
-            <td>Result</td>
+            <td>Query</td>
             <td>Date</td>
         </tr>
         <tr th:each="entry : ${history}">
             <td th:text="${entry.timestamp}"></td>
-            <td th:text="${entry.queryResult.query.from}"></td>
-            <td th:text="${entry.queryResult.query.to}"></td>
-            <td th:text="${entry.queryResult.query.amount}"></td>
-            <td th:text="${entry.queryResult.result}"></td>
+            <td th:text="${entry.queryResult.query.amount} + ' ' +
+                            ${entry.queryResult.query.from} + ' = ' +
+                            ${entry.queryResult.result} + ' ' +
+                            ${entry.queryResult.query.to}"></td>
+
             <td th:text="${entry.queryResult.query.date}"></td>
         </tr>
     </table>

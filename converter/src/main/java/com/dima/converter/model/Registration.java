@@ -12,6 +12,7 @@ public class Registration {
     @Size(min=2, max=30)
     String username;
 
+    //TODO add password repeated field
     @Size(min=6, max=18)
     String password;
 
@@ -23,6 +24,9 @@ public class Registration {
     @Past(message = "Invalid date. Must be in the past.")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     Date birthday;
+
+    @NotNull
+    private Role role = Role.USER;
 
     public String getUsername() {
         return username;
@@ -55,4 +59,13 @@ public class Registration {
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
+
