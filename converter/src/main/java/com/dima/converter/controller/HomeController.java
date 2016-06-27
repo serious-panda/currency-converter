@@ -1,10 +1,16 @@
 package com.dima.converter.controller;
 
-import com.dima.converter.model.QueryResult;
 import com.dima.converter.model.ConversionQuery;
+import com.dima.converter.model.QueryResult;
 import com.dima.converter.service.ConversionService;
 import com.dima.converter.service.QueryHistory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,26 +20,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
-public class HomeController {
-    Map<String, String> currencies = new HashMap<>();
+public class HomeController implements ResourceLoaderAware {
+
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
+    private Map<String, String> currencies = new HashMap<>();
 
     @Autowired
     private ConversionService service;
 
     @Autowired
-    QueryHistory queryHistory;
+    private QueryHistory queryHistory;
 
-    HomeController(){
-        currencies.put("USD", "dfdsfdsfd");
-        currencies.put("CAD", "4353456345");
-        currencies.put("EUR", "sdfsd 4334 34 dfsd");
-    }
-
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping("/home")
     public String mainPage(ConversionQuery conversionQuery, Model model) {
 
@@ -42,6 +50,7 @@ public class HomeController {
         return "home";
     }
 
+    @PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/home", method = RequestMethod.POST)
     public String query(@Valid ConversionQuery conversionQuery, Model model, BindingResult bindingResult) {
 
@@ -66,5 +75,18 @@ public class HomeController {
     private QueryHistory.Entry[] getHistory(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return queryHistory.get(auth.getName());
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        Resource resource = resourceLoader.getResource("classpath:currencies.csv");
+
+        //Files.newBufferedReader(resource.getFile() /*Paths.get("currencies.csv")*/)
+        try(BufferedReader bufferReader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            currencies = bufferReader.lines().map(l -> l.split(",")).collect(Collectors.toMap(x->x[0], x->x[1]));
+        } catch (IOException e) {
+            logger.error("Failed to load list of currencies from resources.");
+        }
+
     }
 }

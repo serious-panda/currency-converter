@@ -3,18 +3,26 @@ package com.dima.converter.service;
 import com.dima.converter.utils.UrlClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-@Service
-public class OpenExchangeClient implements RatesLoader {
-    ObjectMapper mapper = new ObjectMapper();
+@Repository
+@EnableCaching
+public class OpenExchangeClient implements RatesRepository {
+
+    private static final Logger logger = LoggerFactory.getLogger(OpenExchangeClient.class);
+
+    //TODO check thread safety
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Value("${openexchangerates.app.id}")
     private String appId;
@@ -27,31 +35,27 @@ public class OpenExchangeClient implements RatesLoader {
     private static final String LATEST = "latest.json";
     private static final String HISTORICAL = "historical/%04d-%02d-%02d.json";
     private static final String APP_ID = "?app_id=";
-    private static final String SYMBOLS = "&symbols=";
 
     // https://openexchangerates.org/api/latest.json?app_id=YOUR_APP_APP_ID
     private static final String LIVE_URL = BASE_URL + LATEST + APP_ID;
     private static final String HISTORICAL_URL = BASE_URL + HISTORICAL + APP_ID;
 
-    // TODO make cacheable with configurable TTL
     @Cacheable("liveRates")
-    public Double getLive(String base, String quote){
-        return getRates(createLiveUrl(base, Arrays.asList(new String[]{quote}))).get(quote);
-    }
-
-    @Cacheable("liveRates")
-    public Map<String, Double> getLive(String base, List<String> quotes){
-        return getRates(createLiveUrl(base, quotes));
+    public Map<String, Double> getLive(){
+        return getRates(LIVE_URL + appId);
     }
 
     @Cacheable("historicalRates")
-    public Double getHistorical(String base, String quote, Date date){
-        return getRates(createHistoricalUrl(base, Arrays.asList(new String[]{quote}), date)).get(quote);
-    }
+    public Map<String, Double> getHistorical(Date date){
 
-    @Cacheable("historicalRates")
-    public Map<String, Double> getHistorical(String base, List<String> currencies, Date date){
-        return getRates(createHistoricalUrl(base, currencies, date));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+
+        return getRates(String.format(HISTORICAL_URL + appId, year, month, day));
     }
 
     private Map<String, Double> getRates(String url){
@@ -64,12 +68,10 @@ public class OpenExchangeClient implements RatesLoader {
                 rates.putAll(parseRates(exchangeRates));
             } else {
                 String error = parseError(exchangeRates);
-                // TODO log the message
+                logger.error("Exchange rates update failed: " + error);
             }
         } catch (IOException e) {
-            // TODO log error
-        } catch (Throwable e){
-            int a =4;
+            logger.error("Exchange rates update failed: " + e.getMessage());
         }
         return rates;
     }
@@ -97,7 +99,7 @@ public class OpenExchangeClient implements RatesLoader {
 //              ...
 //        }
 
-        Date timestamp = new Date((long)(exchangeRates.get("timestamp").longValue()*1000));
+        //Date timestamp = new Date((long)(exchangeRates.get("timestamp").longValue()*1000));
         Iterator<Map.Entry<String, JsonNode>> fieldNames = exchangeRates.get("rates").fields();
         fieldNames.forEachRemaining(e -> rates.put(e.getKey(), e.getValue().doubleValue()));
 
@@ -108,33 +110,6 @@ public class OpenExchangeClient implements RatesLoader {
 
     private boolean isValidResponse(JsonNode exchangeRates) {
         return exchangeRates.get("error") == null;
-    }
-
-    private String createLiveUrl(String base, List<String> currencies){
-        // https://openexchangerates.org/api/latest.json?app_id=YOUR_APP_APP_ID
-        StringBuilder b = new StringBuilder(LIVE_URL);
-        b.append(appId).append("&base=").append(base);
-        if (currencies != null && !currencies.isEmpty()){
-            b.append(SYMBOLS).append(String.join(",", currencies));
-        }
-
-        return b.toString();
-    }
-
-    private String createHistoricalUrl(String base, List<String> currencies, Date date){
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-
-        StringBuilder b = new StringBuilder(String.format(HISTORICAL_URL,year,month,day));
-        b.append(appId).append("&base=").append(base);
-        if (currencies != null && !currencies.isEmpty()){
-            b.append(SYMBOLS).append(String.join(",", currencies));
-        }
-        return b.toString();
     }
 
 }

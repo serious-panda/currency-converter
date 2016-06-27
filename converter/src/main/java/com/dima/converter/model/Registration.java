@@ -3,6 +3,7 @@ package com.dima.converter.model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Past;
 import java.util.Date;
@@ -10,9 +11,12 @@ import java.util.Date;
 public class Registration {
     @Size(min=2, max=30)
     String username;
+
     @Size(min=6, max=18)
     String password;
 
+    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+            message = "Invalid email address.")
     String email;
 
     @NotNull(message = "Birthday is required.")
@@ -41,16 +45,6 @@ public class Registration {
     }
 
     public void setEmail(String email) {
-//        try
-//        {
-//            InternetAddress internetAddress = new InternetAddress(email);
-//            internetAddress.validate();
-//            return true;
-//        }
-//        catch(Exception ex)
-//        {
-//            return false;
-//        }
         this.email = email;
     }
 
