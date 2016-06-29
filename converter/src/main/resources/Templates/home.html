@@ -60,7 +60,10 @@
 </form>
 
 <div th:if="${result != null}">
-    <p th:text="${result.query.amount} + ' ' + ${result.query.from} + ' = ' + ${result.result} + ' ' + ${result.query.to}" />
+    <p th:text="${#numbers.formatDecimal(result.query.amount, 0, 'COMMA', 2, 'POINT')} + ' ' +
+                ${result.query.from} + ' = ' +
+                ${#numbers.formatDecimal(result.result, 0, 'COMMA', 2, 'POINT')} + ' ' +
+                ${result.query.to}"></p>
 </div>
 
 <div th:if="${not #lists.isEmpty(history)}">
@@ -73,9 +76,9 @@
         </tr>
         <tr th:each="entry : ${history}">
             <td th:text="${#dates.format(entry.timestamp, 'dd/MMM/yyyy HH:mm')}"></td>
-            <td th:text="${entry.amount} + ' ' +
+            <td th:text="${#numbers.formatDecimal(entry.amount, 0, 'COMMA', 2, 'POINT')} + ' ' +
                             ${entry.base} + ' = ' +
-                            ${entry.result} + ' ' +
+                            ${#numbers.formatDecimal(entry.result, 0, 'COMMA', 2, 'POINT')}  + ' ' +
                             ${entry.quote}"></td>
             <td th:if="${entry.date != null}" th:text="'On ' + ${#dates.format(entry.date, 'dd/MMM/yyyy')}">Live</td>
         </tr>

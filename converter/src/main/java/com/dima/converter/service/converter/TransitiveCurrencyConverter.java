@@ -10,8 +10,13 @@ import java.util.*;
 @Service
 public class TransitiveCurrencyConverter implements ConversionService {
     private final static int CONVERSION_PRECISION = 5;
+
+    private final RatesRepository ratesRepository;
+
     @Autowired
-    private RatesRepository ratesRepository;
+    public TransitiveCurrencyConverter(RatesRepository ratesRepository){
+        this.ratesRepository = ratesRepository;
+    }
 
     @Override
     public double convert(double amount, String base, String quote, Date date) {
@@ -35,7 +40,5 @@ public class TransitiveCurrencyConverter implements ConversionService {
         BigDecimal bdInUsd = bdAmount.divide(bdToUsdRate, CONVERSION_PRECISION, RoundingMode.HALF_UP );
         BigDecimal bdResult = bdInUsd.multiply(new BigDecimal(Double.toString(rates.get(quote))));
         return bdResult.setScale(2, RoundingMode.HALF_UP).doubleValue();
-        //double usd = amount / rates.get(base);
-        //return usd * rates.get(quote);
     }
 }

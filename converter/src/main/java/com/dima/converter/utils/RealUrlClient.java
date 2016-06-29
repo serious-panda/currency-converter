@@ -25,12 +25,16 @@ public class RealUrlClient implements UrlClient {
         URL urlObj = new URL(url);
 
         URLConnection connection;
-        if (proxyHost != null && !proxyHost.isEmpty() && proxyPort != -1) {
+        if (isProxyConfigured()) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
             connection = urlObj.openConnection(proxy);
         } else {
             connection = urlObj.openConnection();
         }
         return connection.getInputStream();
+    }
+
+    private boolean isProxyConfigured(){
+        return proxyHost != null && !proxyHost.isEmpty() && proxyPort != -1;
     }
 }

@@ -24,9 +24,6 @@ import java.nio.charset.StandardCharsets;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private DataSource dataSource;
-
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -51,14 +48,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(new BCryptPasswordEncoder());
     }
-
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        //TODO user data service & password encryption
-//        auth.jdbcAuthentication().dataSource(dataSource);//.passwordEncoder(new BCryptPasswordEncoder());
-//
-//    }
-
 
     public UrlClient urlClient(){
         //return new RealUrlClient();

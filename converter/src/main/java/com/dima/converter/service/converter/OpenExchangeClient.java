@@ -22,13 +22,19 @@ public class OpenExchangeClient implements RatesRepository {
     private static final Logger logger = LoggerFactory.getLogger(OpenExchangeClient.class);
 
     //TODO check thread safety
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    @Value("${openexchangerates.app.id}")
-    private String appId;
+//    @Value("${openexchangerates.app.id}")
+    private final String appId;
+//
+//    @Autowired
+    private final UrlClient client;
 
     @Autowired
-    UrlClient client;
+    public OpenExchangeClient(@Value("${openexchangerates.app.id}")String appId, UrlClient client){
+        this.appId = appId;
+        this.client = client;
+    }
 
     // essential URL structure is built using constants
     private final static String BASE_URL = "http://openexchangerates.org/api/";

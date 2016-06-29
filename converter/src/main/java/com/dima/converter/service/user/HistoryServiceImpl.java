@@ -2,19 +2,12 @@ package com.dima.converter.service.user;
 
 import com.dima.converter.model.History;
 import com.dima.converter.model.QueryResult;
-import com.dima.converter.model.Registration;
-import com.dima.converter.model.User;
 import com.dima.converter.repository.HistoryRepository;
-import com.dima.converter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
