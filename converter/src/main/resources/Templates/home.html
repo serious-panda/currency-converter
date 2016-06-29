@@ -28,15 +28,17 @@
             <td>
             <select th:field="*{from}">
                 <option th:each="dropDownItem : ${currencies}"
-                        th:value="${dropDownItem.key}"
-                        th:text="${dropDownItem.key} + ' - ' + ${dropDownItem.value}" />
+                        th:value="${dropDownItem.name}"
+                        th:selected="'USD'"
+                        th:text="${dropDownItem.name} + ' - ' + ${dropDownItem.title}" />
             </select>
             </td>
             <td>
                 <select th:field="*{to}">
                     <option th:each="dropDownItem : ${currencies}"
-                            th:value="${dropDownItem.key}"
-                            th:text="${dropDownItem.key} + ' - ' + ${dropDownItem.value}" />
+                            th:value="${dropDownItem.name}"
+                            th:selected="'EUR'"
+                            th:text="${dropDownItem.name} + ' - ' + ${dropDownItem.title}" />
                 </select>
             </td>
             <td><input type="text" th:field="*{date}" /></td>
@@ -70,13 +72,12 @@
             <td>Date</td>
         </tr>
         <tr th:each="entry : ${history}">
-            <td th:text="${entry.timestamp}"></td>
-            <td th:text="${entry.queryResult.query.amount} + ' ' +
-                            ${entry.queryResult.query.from} + ' = ' +
-                            ${entry.queryResult.result} + ' ' +
-                            ${entry.queryResult.query.to}"></td>
-
-            <td th:text="${entry.queryResult.query.date}"></td>
+            <td th:text="${#dates.format(entry.timestamp, 'dd/MMM/yyyy HH:mm')}"></td>
+            <td th:text="${entry.amount} + ' ' +
+                            ${entry.base} + ' = ' +
+                            ${entry.result} + ' ' +
+                            ${entry.quote}"></td>
+            <td th:if="${entry.date != null}" th:text="'On ' + ${#dates.format(entry.date, 'dd/MMM/yyyy')}">Live</td>
         </tr>
     </table>
 </div>

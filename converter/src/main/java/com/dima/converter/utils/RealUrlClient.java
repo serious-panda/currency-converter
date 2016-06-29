@@ -11,20 +11,21 @@ import java.net.*;
 
 @Component
 public class RealUrlClient implements UrlClient {
-    @Value("${proxy.host}")
-    private String proxyHost = null;
-
-    @Value("${proxy.port}")
-    private int proxyPort;
 
     private static final Logger logger = LoggerFactory.getLogger(RealUrlClient.class);
+
+    @Value("${proxy.host:}")
+    private String proxyHost;
+
+    @Value("${proxy.port:-1}")
+    private int proxyPort;
 
     public InputStream getResponse(String url) throws IOException {
         logger.debug("Sending GET request to " + url);
         URL urlObj = new URL(url);
 
         URLConnection connection;
-        if (proxyHost != null && !proxyHost.isEmpty()) {
+        if (proxyHost != null && !proxyHost.isEmpty() && proxyPort != -1) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
             connection = urlObj.openConnection(proxy);
         } else {
