@@ -79,7 +79,7 @@
                 <configuration>
                     <appName>${heroku.appName}</appName>
                     <processTypes>
-                        <web>java -Dserver.port=$PORT -jar currency-converter-1.0-SNAPSHOT.jar</web>
+                        <web>java -Dserver.port=$PORT -jar target/currency-converter-1.0-SNAPSHOT.jar</web>
                     </processTypes>
                     <includeTarget>false</includeTarget>
                     <includes>
