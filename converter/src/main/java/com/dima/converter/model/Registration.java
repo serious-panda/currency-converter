@@ -5,25 +5,24 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.Past;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Registration {
-    @Size(min=2, max=30)
+
+    @Size(min=2, max=30, message = "{errors.range}")
     String username;
 
-    //TODO add password repeated field
-    @Size(min=6, max=18)
+    @Size(min=6, max=18, message = "{errors.range}")
     String password;
 
     @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
-            message = "Invalid email address.")
+            message = "{errors.email}")
     String email;
 
-    @NotNull(message = "Birthday is required.")
-    @Past(message = "Invalid date. Must be in the past.")
+    @NotNull(message = "{errors.requird}")
+    @LocalDatePast(message = "{errors.dateInFuture}")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    Date birthday;
+    private LocalDate birthday;
 
     @NotNull
     private Role role = Role.USER;
@@ -52,11 +51,11 @@ public class Registration {
         this.email = email;
     }
 
-    public Date getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 

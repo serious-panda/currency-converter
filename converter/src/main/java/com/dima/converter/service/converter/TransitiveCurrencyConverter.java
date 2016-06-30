@@ -1,5 +1,6 @@
 package com.dima.converter.service.converter;
 
+import com.dima.converter.repository.RatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,20 +20,23 @@ public class TransitiveCurrencyConverter implements ConversionService {
     }
 
     @Override
-    public double convert(double amount, String base, String quote, Date date) {
+    public double convert(double amount, String base, String quote, Date date) throws SymbolNotSupportedException {
         Map<String, Double> rates = ratesRepository.getHistorical(date);
         return convert(amount,base,quote,rates);
     }
 
     @Override
-    public double convert(double amount, String base, String quote) {
+    public double convert(double amount, String base, String quote) throws SymbolNotSupportedException {
         Map<String, Double> rates = ratesRepository.getLive();
         return convert(amount,base,quote,rates);
     }
 
-    private double convert(double amount, String base, String quote, Map<String, Double> rates){
-        if (!rates.containsKey(base) || !rates.containsKey(quote)){
-            throw new IllegalArgumentException("Unknown symbols");
+    private double convert(double amount, String base, String quote, Map<String, Double> rates) throws SymbolNotSupportedException {
+        if (!rates.containsKey(base)){
+            throw new SymbolNotSupportedException(base);
+        }
+        if (!rates.containsKey(quote)){
+            throw new SymbolNotSupportedException(quote);
         }
         // convert base to USD
         BigDecimal bdAmount = new BigDecimal(Double.toString(amount));

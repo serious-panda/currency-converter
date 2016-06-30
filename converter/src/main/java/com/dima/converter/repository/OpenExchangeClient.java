@@ -1,4 +1,4 @@
-package com.dima.converter.service.converter;
+package com.dima.converter.repository;
 
 import com.dima.converter.utils.UrlClient;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,10 +24,8 @@ public class OpenExchangeClient implements RatesRepository {
     //TODO check thread safety
     private final ObjectMapper mapper = new ObjectMapper();
 
-//    @Value("${openexchangerates.app.id}")
     private final String appId;
-//
-//    @Autowired
+
     private final UrlClient client;
 
     @Autowired

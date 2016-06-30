@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CurrentUserDetailsService implements UserDetailsService {
+
     private final UserService userService;
 
     @Autowired

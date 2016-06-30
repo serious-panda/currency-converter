@@ -1,4 +1,4 @@
-package com.dima.converter.service.converter;
+package com.dima.converter.repository;
 
 import java.util.Date;
 import java.util.Map;

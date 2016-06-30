@@ -24,7 +24,7 @@ public class History {
     @Column(name = "base", nullable = false)
     private String base;
 
-    @Column(name = "reqult", nullable = false)
+    @Column(name = "result", nullable = false)
     private double result;
 
     @Column(name = "quote", nullable = false)
@@ -49,9 +49,7 @@ public class History {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 
     public double getAmount() {
         return amount;

@@ -1,8 +1,10 @@
 package com.dima.converter.controller;
 
 import com.dima.converter.model.ConversionQuery;
+import com.dima.converter.model.CurrentUser;
 import com.dima.converter.model.QueryResult;
 import com.dima.converter.service.converter.ConversionService;
+import com.dima.converter.service.converter.SymbolNotSupportedException;
 import com.dima.converter.service.user.HistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,44 +34,53 @@ public class HomeController implements ResourceLoaderAware {
 
     private List<CurrencyModel> currencies = new ArrayList<>();
 
-    @Autowired
-    private ConversionService service;
+    private final ConversionService service;
+
+    private final HistoryService historyService;
+
+    //private final static String HOME_VIEW = "classpath:resources/templates/home";
+    private final static String HOME_VIEW = "home";
 
     @Autowired
-    private HistoryService historyService;
+    public HomeController(ConversionService conversionService, HistoryService historyService){
+        this.service = conversionService;
+        this.historyService = historyService;
+    }
 
     //@PreAuthorize("hasRole('USER')")
     @RequestMapping("/home")
-    public String mainPage(ConversionQuery conversionQuery, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public String mainPage(@AuthenticationPrincipal CurrentUser currentUser, ConversionQuery conversionQuery, Model model) {
 
-        model.addAttribute("history", historyService.getUserHistory(auth.getName()));
+        model.addAttribute("history", historyService.getUserHistory(currentUser.getUsername()));
         model.addAttribute("currencies", currencies);
 
-        return "home";
+        return HOME_VIEW;
     }
 
     //@PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/home", method = RequestMethod.POST)
-    public String query(@Valid ConversionQuery conversionQuery, Model model, BindingResult bindingResult) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public String query(@AuthenticationPrincipal CurrentUser currentUser,
+                        @Valid ConversionQuery conversionQuery,
+                        Model model, BindingResult bindingResult) {
 
-        model.addAttribute("history", historyService.getUserHistory(username));
+        model.addAttribute("history", historyService.getUserHistory(currentUser.getUsername()));
         model.addAttribute("currencies", currencies);
 
         if (bindingResult.hasErrors()) {
-            return "home";
+            return HOME_VIEW;
         }
+        try {
+            double res = conversionQuery.getDate() == null ?
+                    service.convert(conversionQuery.getAmount(), conversionQuery.getFrom(), conversionQuery.getTo()) :
+                    service.convert(conversionQuery.getAmount(), conversionQuery.getFrom(), conversionQuery.getTo(), conversionQuery.getDate());
+            QueryResult queryResult = new QueryResult(conversionQuery,res);
 
-        double res = conversionQuery.getDate() == null?
-                service.convert(conversionQuery.getAmount(), conversionQuery.getFrom(), conversionQuery.getTo()) :
-                service.convert(conversionQuery.getAmount(), conversionQuery.getFrom(), conversionQuery.getTo(), conversionQuery.getDate());
-
-        QueryResult queryResult = new QueryResult(conversionQuery,res);
-
-        model.addAttribute("result", queryResult);
-        historyService.create(username, queryResult);
-        return "home";
+            model.addAttribute("result", queryResult);
+            historyService.create(currentUser.getUsername(), queryResult);
+        } catch (SymbolNotSupportedException e){
+            bindingResult.reject("symbol not supported");
+        }
+        return HOME_VIEW;
     }
 
     @Override
