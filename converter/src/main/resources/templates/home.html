@@ -1,26 +1,24 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+
+<head th:replace="global/meta :: meta">
     <title>Currency Converter - Home</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
+
 <body>
-
-<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
-</form>
-
-<p>Convert:</p>
+<div class="banner">
+    <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+    <form class="right" th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out"/>
+    </form>
+</div>
 
 <form action="#" th:action="@{/home}" th:object="${conversionQuery}" method="post">
 
     <table>
         <tr>
-            <th>Convert</th>
-            <th></th>
-            <th>To</th>
-            <th></th>
+            <th colspan="2">Convert</th>
+            <th colspan="2">To</th>
         </tr>
         <tr>
             <td><input type="text" th:field="*{amount}" /></td>
@@ -45,22 +43,22 @@
             <td><input type="submit" value="Convert" /></td>
         </tr>
         <tr>
-            <td th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Invalid amount</td>
+            <td class="error" colspan="4" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Invalid amount</td>
         </tr>
         <tr>
-            <td th:if="${#fields.hasErrors('from')}" th:errors="*{from}">Invalid 'from' currency</td>
+            <td class="error" colspan="4" th:if="${#fields.hasErrors('from')}" th:errors="*{from}">Invalid 'from' currency</td>
         </tr>
         <tr>
-            <td th:if="${#fields.hasErrors('to')}" th:errors="*{to}">Invalid 'to' currency</td>
+            <td class="error" colspan="4" th:if="${#fields.hasErrors('to')}" th:errors="*{to}">Invalid 'to' currency</td>
         </tr>
         <tr>
-            <td th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Invalid date</td>
+            <td class="error" colspan="4" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Invalid date</td>
         </tr>
     </table>
 </form>
 
 <div th:if="${result != null}">
-    <p th:text="${#numbers.formatDecimal(result.query.amount, 0, 'COMMA', 2, 'POINT')} + ' ' +
+    <p style="margin: 20px;" th:text="${#numbers.formatDecimal(result.query.amount, 0, 'COMMA', 2, 'POINT')} + ' ' +
                 ${result.query.from} + ' = ' +
                 ${#numbers.formatDecimal(result.result, 0, 'COMMA', 2, 'POINT')} + ' ' +
                 ${result.query.to}"></p>
@@ -70,9 +68,9 @@
     <h2>History</h2>
     <table>
         <tr>
-            <td>Timestamp</td>
-            <td>Query</td>
-            <td>Date</td>
+            <th>Timestamp</th>
+            <th>Query</th>
+            <th>Date</th>
         </tr>
         <tr th:each="entry : ${history}">
             <td th:text="${#dates.format(entry.timestamp, 'dd/MMM/yyyy HH:mm')}"></td>

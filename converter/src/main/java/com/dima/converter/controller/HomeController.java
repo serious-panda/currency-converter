@@ -46,8 +46,11 @@ public class HomeController implements ResourceLoaderAware {
         this.service = conversionService;
         this.historyService = historyService;
     }
+    @RequestMapping("/")
+    public String mainPage() {
+        return "redirect:/home";
+    }
 
-    //@PreAuthorize("hasRole('USER')")
     @RequestMapping("/home")
     public String mainPage(@AuthenticationPrincipal CurrentUser currentUser, ConversionQuery conversionQuery, Model model) {
 
@@ -57,16 +60,17 @@ public class HomeController implements ResourceLoaderAware {
         return HOME_VIEW;
     }
 
-    //@PreAuthorize("hasRole('USER')")
     @RequestMapping(value = "/home", method = RequestMethod.POST)
     public String query(@AuthenticationPrincipal CurrentUser currentUser,
                         @Valid ConversionQuery conversionQuery,
-                        Model model, BindingResult bindingResult) {
+                        BindingResult bindingResult,
+                        Model model) {
 
         model.addAttribute("history", historyService.getUserHistory(currentUser.getUsername()));
         model.addAttribute("currencies", currencies);
 
         if (bindingResult.hasErrors()) {
+            conversionQuery.setAmount(1);
             return HOME_VIEW;
         }
         try {

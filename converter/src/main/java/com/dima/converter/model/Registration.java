@@ -19,7 +19,7 @@ public class Registration {
             message = "{errors.email}")
     String email;
 
-    @NotNull(message = "{errors.requird}")
+    @NotNull(message = "{errors.required}")
     @LocalDatePast(message = "{errors.dateInFuture}")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthday;

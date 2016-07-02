@@ -14,7 +14,6 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping("/register")
 public class RegistrationController {
 
     private final UserService userService;
@@ -33,12 +32,12 @@ public class RegistrationController {
         this.userService.create(r);
     }
 
-    @RequestMapping(value="/")
+    @RequestMapping(value="/register")
     public String registrationForm(Registration registration) {
         return "registration";
     }
 
-    @RequestMapping(value="/", method = RequestMethod.POST)
+    @RequestMapping(value="/register", method = RequestMethod.POST)
     public String registrationSubmit(@Valid Registration registration, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {

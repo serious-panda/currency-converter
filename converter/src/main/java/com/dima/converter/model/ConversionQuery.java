@@ -15,8 +15,7 @@ public class ConversionQuery {
     @NotNull
     private String to;
 
-    @Min(0)
-    private double amount;
+    private double amount = 1;
 
     @Past(message = "Invalid date. Must be in the past.")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
