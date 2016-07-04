@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class TransitiveCurrencyConverterTest {
     }
 
     @Test
-    public void convert() throws Exception {
+    public void convert() throws Exception, ConversionServiceException {
         Map<String, Double> rates = createRatesMap();
 
         double amount = 12;
@@ -66,7 +67,7 @@ public class TransitiveCurrencyConverterTest {
 
         BigDecimal bd = new BigDecimal(Double.valueOf(res));
         res = bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-        Date now = new Date(); // it doesn't matter at a level of repository if the date is not a historical.
+        LocalDate now = LocalDate.now();// it doesn't matter at a level of repository if the date is not a historical.
         when(ratesRepository.getHistorical(now)).thenReturn(rates);
         double val = converter.convert(amount, "aaa", "bbb",now);
         assertThat(val).isEqualTo(res);

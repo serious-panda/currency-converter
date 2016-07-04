@@ -1,6 +1,6 @@
 package com.dima.converter.service.user;
 
-import com.dima.converter.model.History;
+import com.dima.converter.model.jpa.History;
 import com.dima.converter.model.QueryResult;
 
 import java.util.List;

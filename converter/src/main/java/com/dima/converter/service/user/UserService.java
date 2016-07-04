@@ -1,7 +1,7 @@
 package com.dima.converter.service.user;
 
 import com.dima.converter.model.Registration;
-import com.dima.converter.model.User;
+import com.dima.converter.model.jpa.User;
 
 import java.util.Collection;
 import java.util.Optional;

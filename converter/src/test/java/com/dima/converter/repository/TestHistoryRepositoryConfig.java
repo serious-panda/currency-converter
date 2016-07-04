@@ -1,6 +1,6 @@
 package com.dima.converter.repository;
 
-import com.dima.converter.model.History;
+import com.dima.converter.model.jpa.History;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.orm.jpa.EntityScan;

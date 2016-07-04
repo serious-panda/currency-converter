@@ -1,6 +1,7 @@
-package com.dima.converter.model;
+package com.dima.converter.model.jpa;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -16,7 +17,7 @@ public class History {
     private String username;
 
     @Column(name = "timestamp", nullable = false)
-    private Date timestamp;
+    private LocalDate timestamp;
 
     @Column(name = "amount", nullable = false)
     private double amount;
@@ -31,7 +32,7 @@ public class History {
     private String quote;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     public Long getId() {
         return id;
@@ -45,11 +46,11 @@ public class History {
 
     public void setUsername(String username) { this.username = username; }
 
-    public Date getTimestamp() {
+    public LocalDate getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
+    public void setTimestamp(LocalDate timestamp) { this.timestamp = timestamp; }
 
     public double getAmount() {
         return amount;
@@ -83,9 +84,7 @@ public class History {
         this.quote = quote;
     }
 
-    public Date getDate() { return date; }
+    public LocalDate getDate() { return date; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public void setDate(LocalDate date) { this.date = date; }
 }

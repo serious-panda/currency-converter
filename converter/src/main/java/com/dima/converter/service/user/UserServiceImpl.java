@@ -1,7 +1,7 @@
 package com.dima.converter.service.user;
 
 import com.dima.converter.model.Registration;
-import com.dima.converter.model.User;
+import com.dima.converter.model.jpa.User;
 import com.dima.converter.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;

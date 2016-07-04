@@ -1,9 +1,9 @@
 //package com.dima.converter;
 //
 //import com.dima.converter.controller.HomeController;
-//import com.dima.converter.model.History;
+//import com.dima.converter.model.jpa.History;
 //import com.dima.converter.model.Registration;
-//import com.dima.converter.model.Role;
+//import com.dima.converter.model.jpa.Role;
 //import com.dima.converter.service.converter.TransitiveCurrencyConverter;
 //import com.dima.converter.service.currentuser.CurrentUserDetailsService;
 //import com.dima.converter.service.user.HistoryServiceImpl;

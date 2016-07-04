@@ -1,4 +1,4 @@
-package com.dima.converter.model;
+package com.dima.converter.model.validation;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -8,8 +8,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 /**
- * Custom JPA {@link AttributeConverter} to support Java 8's {@link LocalDate}.
- *
+ * Custom JPA AttributeConverter to support Java 8's LocalDate
  */
 @Converter(autoApply = true)
 public class LocalDateConverter implements AttributeConverter<LocalDate, Date> {

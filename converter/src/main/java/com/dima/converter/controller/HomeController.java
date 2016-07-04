@@ -4,6 +4,7 @@ import com.dima.converter.model.ConversionQuery;
 import com.dima.converter.model.CurrentUser;
 import com.dima.converter.model.QueryResult;
 import com.dima.converter.service.converter.ConversionService;
+import com.dima.converter.service.converter.ConversionServiceException;
 import com.dima.converter.service.converter.SymbolNotSupportedException;
 import com.dima.converter.service.user.HistoryService;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +40,6 @@ public class HomeController implements ResourceLoaderAware {
 
     private final HistoryService historyService;
 
-    //private final static String HOME_VIEW = "classpath:resources/templates/home";
     private final static String HOME_VIEW = "home";
 
     @Autowired
@@ -82,7 +83,9 @@ public class HomeController implements ResourceLoaderAware {
             model.addAttribute("result", queryResult);
             historyService.create(currentUser.getUsername(), queryResult);
         } catch (SymbolNotSupportedException e){
-            bindingResult.reject("symbol not supported");
+            bindingResult.reject("bad.symbol", "Symbol not supported.");
+        } catch (ConversionServiceException e) {
+            bindingResult.reject("service.error", "Service not available. Please try again later.");
         }
         return HOME_VIEW;
     }

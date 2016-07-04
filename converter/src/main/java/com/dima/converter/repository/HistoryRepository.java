@@ -1,6 +1,6 @@
 package com.dima.converter.repository;
 
-import com.dima.converter.model.History;
+import com.dima.converter.model.jpa.History;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

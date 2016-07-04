@@ -1,5 +1,7 @@
 package com.dima.converter.model;
 
+import com.dima.converter.model.jpa.Role;
+import com.dima.converter.model.jpa.User;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 public class CurrentUser extends org.springframework.security.core.userdetails.User {

@@ -1,4 +1,4 @@
-package com.dima.converter.model;
+package com.dima.converter.model.jpa;
 
 import javax.persistence.*;
 

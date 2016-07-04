@@ -1,6 +1,6 @@
 package com.dima.converter.repository;
 
-import com.dima.converter.model.User;
+import com.dima.converter.model.jpa.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

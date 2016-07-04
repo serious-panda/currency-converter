@@ -1,12 +1,12 @@
 package com.dima.converter.repository;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Map;
 
 public interface RatesRepository {
 
     Map<String, Double> getLive();
 
-    Map<String, Double> getHistorical(Date date);
+    Map<String, Double> getHistorical(LocalDate date);
 
 }

@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="global/meta :: meta">
-    <title>Currency Converter - Home</title>
+    <title th:text="#{currencyconverter} + ' - ' + #{home}"></title>
 </head>
 
 <body>
 <div class="banner">
     <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
     <form class="right" th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out"/>
+        <input type="submit" th:value="#{sign.out}"/>
     </form>
 </div>
 
@@ -18,7 +18,8 @@
     <table>
         <tr>
             <th colspan="2">Convert</th>
-            <th colspan="2">To</th>
+            <th>To</th>
+            <th>dd/MM/yyyy</th>
         </tr>
         <tr>
             <td><input type="text" th:field="*{amount}" /></td>
@@ -40,7 +41,7 @@
                 </select>
             </td>
             <td><input type="text" th:field="*{date}" /></td>
-            <td><input type="submit" value="Convert" /></td>
+            <td><input type="submit" th:value="#{convert}" /></td>
         </tr>
         <tr>
             <td class="error" colspan="4" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Invalid amount</td>
@@ -53,6 +54,11 @@
         </tr>
         <tr>
             <td class="error" colspan="4" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">Invalid date</td>
+        </tr>
+        <tr>
+            <td th:if="${#fields.hasGlobalErrors()}">
+                <p class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p>
+            </td>
         </tr>
     </table>
 </form>

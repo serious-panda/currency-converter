@@ -1,5 +1,7 @@
 package com.dima.converter.model;
 
+import com.dima.converter.model.jpa.Role;
+import com.dima.converter.model.validation.LocalDatePast;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;

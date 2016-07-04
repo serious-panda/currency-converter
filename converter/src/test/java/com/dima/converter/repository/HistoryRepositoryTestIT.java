@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-import com.dima.converter.model.History;
+import com.dima.converter.model.jpa.History;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -27,7 +27,7 @@ public class HistoryRepositoryTestIT extends AbstractTransactionalJUnit4SpringCo
         event.setResult(12);
         event.setAmount(21);
         event.setUsername("username");
-        event.setTimestamp(new Date(System.currentTimeMillis()));
+        event.setTimestamp(LocalDate.now());
 
         History savedEvent = repo.save(event);
         repo.flush();
@@ -64,7 +64,7 @@ public class HistoryRepositoryTestIT extends AbstractTransactionalJUnit4SpringCo
         event.setResult(12);
         event.setAmount(21);
         event.setUsername("username");
-        event.setTimestamp(new Date(System.currentTimeMillis()));
+        event.setTimestamp(LocalDate.now());
 
         History savedEvent = repo.save(event);
         repo.flush();

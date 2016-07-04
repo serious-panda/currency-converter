@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -20,23 +21,26 @@ public class TransitiveCurrencyConverter implements ConversionService {
     }
 
     @Override
-    public double convert(double amount, String base, String quote, Date date) throws SymbolNotSupportedException {
+    public double convert(double amount, String base, String quote, LocalDate date) throws SymbolNotSupportedException, ConversionServiceException {
         Map<String, Double> rates = ratesRepository.getHistorical(date);
         return convert(amount,base,quote,rates);
     }
 
     @Override
-    public double convert(double amount, String base, String quote) throws SymbolNotSupportedException {
+    public double convert(double amount, String base, String quote) throws SymbolNotSupportedException, ConversionServiceException {
         Map<String, Double> rates = ratesRepository.getLive();
         return convert(amount,base,quote,rates);
     }
 
-    private double convert(double amount, String base, String quote, Map<String, Double> rates) throws SymbolNotSupportedException {
+    private double convert(double amount, String base, String quote, Map<String, Double> rates) throws SymbolNotSupportedException, ConversionServiceException {
         if (!rates.containsKey(base)){
             throw new SymbolNotSupportedException(base);
         }
         if (!rates.containsKey(quote)){
             throw new SymbolNotSupportedException(quote);
+        }
+        if (rates.isEmpty()) {
+            throw new ConversionServiceException("Rates not available.");
         }
         // convert base to USD
         BigDecimal bdAmount = new BigDecimal(Double.toString(amount));

@@ -1,7 +1,7 @@
 package com.dima.converter.service.currentuser;
 
 import com.dima.converter.model.CurrentUser;
-import com.dima.converter.model.User;
+import com.dima.converter.model.jpa.User;
 import com.dima.converter.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;

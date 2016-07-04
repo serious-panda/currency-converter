@@ -1,11 +1,12 @@
 package com.dima.converter.service.user;
 
-import com.dima.converter.model.History;
+import com.dima.converter.model.jpa.History;
 import com.dima.converter.model.QueryResult;
 import com.dima.converter.repository.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class HistoryServiceImpl implements HistoryService {
         history.setBase(result.getQuery().getFrom());
         history.setResult(result.getResult());
         history.setQuote(result.getQuery().getTo());
-        history.setTimestamp(new Date());
+        history.setTimestamp(LocalDate.now());
         history.setDate(result.getQuery().getDate());
         return historyRepository.save(history);
     }

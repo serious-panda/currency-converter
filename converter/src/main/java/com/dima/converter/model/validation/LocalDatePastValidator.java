@@ -1,12 +1,10 @@
-package com.dima.converter.model;
+package com.dima.converter.model.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.annotation.Annotation;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 
-public class PastDateValidator implements ConstraintValidator<LocalDatePast, LocalDate> {
+public class LocalDatePastValidator implements ConstraintValidator<LocalDatePast, LocalDate> {
 
 
     @Override
@@ -16,6 +14,6 @@ public class PastDateValidator implements ConstraintValidator<LocalDatePast, Loc
 
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        return localDate != null && localDate.isBefore(LocalDate.now().minusYears(5));
+        return /*localDate != null &&*/ localDate == null || localDate.isBefore(LocalDate.now().minusYears(5));
     }
 }

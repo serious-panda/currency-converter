@@ -8,15 +8,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 
+import javax.cache.annotation.CacheKey;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.*;
 
 @Repository
-@EnableCaching
 public class OpenExchangeClient implements RatesRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenExchangeClient.class);
@@ -44,22 +44,15 @@ public class OpenExchangeClient implements RatesRepository {
     private static final String LIVE_URL = BASE_URL + LATEST + APP_ID;
     private static final String HISTORICAL_URL = BASE_URL + HISTORICAL + APP_ID;
 
-    @Cacheable("liveRates")
+    @Cacheable(value="liveRates", unless = "!#result.isEmpty()")
     public Map<String, Double> getLive(){
         return getRates(LIVE_URL + appId);
     }
 
-    @Cacheable("historicalRates")
-    public Map<String, Double> getHistorical(Date date){
+    @Cacheable(value = "historicalRates", unless = "!#result.isEmpty()")
+    public Map<String, Double> getHistorical(@CacheKey LocalDate date){
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-
-        return getRates(String.format(HISTORICAL_URL + appId, year, month, day));
+        return getRates(String.format(HISTORICAL_URL + appId, date.getYear(), date.getMonth(), date.getDayOfMonth()));
     }
 
     private Map<String, Double> getRates(String url){

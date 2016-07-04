@@ -2,40 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="global/meta :: meta">
-    <title>Currency Converter - Registration</title>
+    <title th:text="#{currencyconverter} + ' - ' + #{registration}"></title>
 </head>
 
 <body>
-<h1>Registration form</h1>
-<form action="#" th:action="@{/register}" th:object="${registration}" method="post">
+<h1 th:text="#{registration.form}">Form</h1>
+    <form action="#" th:action="@{/register}" th:object="${registration}" method="post">
 
-    <table>
-        <tr>
-            <td>Username:</td>
-            <td><input type="text" th:field="*{username}" /></td>
-            <td class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type="password" th:field="*{password}" /></td>
-            <td class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td><input type="text" th:field="*{email}" /></td>
-            <td class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</td>
-        </tr>
-        <tr>
-            <td>Birthday:</td>
-            <td><input type="text" th:field="*{birthday}" /></td>
-            <td class="error" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday Error</td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Register" /></td>
-            <td><input type="reset" value="Clear" /></td>
-        </tr>
-    </table>
+        <table>
+            <tr>
+                <td><label th:for="${#ids.next('username')}" th:text="#{username}">Username</label></td>
+                <td><input type="text" th:field="*{username}" /></td>
+                <td><span th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="error">Name Error</span></td>
+            </tr>
+            <tr>
+                <td><label th:for="${#ids.next('password')}" th:text="#{password}">Password</label></td>
+                <td><input type="password" th:field="*{password}" /></td>
+                <td class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</td>
+            </tr>
+            <tr>
+                <td><label th:for="${#ids.next('email')}" th:text="#{email}">Email</label></td>
+                <td><input type="text" th:field="*{email}" /></td>
+                <td class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</td>
+            </tr>
+            <tr>
+                <td><label th:for="${#ids.next('birthday')}" th:text="#{birthday}">Birthday (dd/MM/yyyy)</label></td>
+                <td><input type="text" th:field="*{birthday}" /></td>
+                <td class="error" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday Error</td>
+            </tr>
+            <tr th:if="${#fields.hasGlobalErrors()}">
+                <td colspan="3" class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</td>
+            </tr>
+            <tr>
+                <td><input type="submit" th:value="#{register}" /></td>
+                <td><input type="reset" th:value="#{clear}" /></td>
+            </tr>
+        </table>
 
-</form>
+    </form>
 </body>
 </html>
