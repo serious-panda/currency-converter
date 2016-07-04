@@ -16,6 +16,12 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Cacheable client for accessing REST API.
+ *
+ * URL example
+ * https://openexchangerates.org/api/latest.json?app_id=YOUR_APP_APP_ID
+ */
 @Repository
 public class OpenExchangeClient implements RatesRepository {
 
@@ -72,12 +78,14 @@ public class OpenExchangeClient implements RatesRepository {
         }
         return rates;
     }
-
+    /*
+    message example
+        "error": true,
+        "status": 401,
+        "message": "invalid_app_id",
+        "description": "Invalid App ID provided - please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org."
+     */
     private String parseError(JsonNode errorObj) {
-//        "error": true,
-//        "status": 401,
-//        "message": "invalid_app_id",
-//        "description": "Invalid App ID provided - please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org."
 
         StringBuilder b = new StringBuilder();
 
@@ -87,21 +95,21 @@ public class OpenExchangeClient implements RatesRepository {
         return b.toString();
     }
 
+    /*
+    message example
+        timestamp: 1449877801,
+        base: "USD",
+        rates: {
+        AED: 3.672538,
+        ...
+        }
+     */
     private Map<String, Double> parseRates(JsonNode exchangeRates) {
         Map<String, Double> rates = new HashMap<>();
-//        timestamp: 1449877801,
-//        base: "USD",
-//        rates: {
-//              AED: 3.672538,
-//              ...
-//        }
 
-        //Date timestamp = new Date((long)(exchangeRates.get("timestamp").longValue()*1000));
         Iterator<Map.Entry<String, JsonNode>> fieldNames = exchangeRates.get("rates").fields();
         fieldNames.forEachRemaining(e -> rates.put(e.getKey(), e.getValue().doubleValue()));
 
-        //DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
-        //String formattedDate = dateFormat.format(timeStampDate);
         return rates;
     }
 
