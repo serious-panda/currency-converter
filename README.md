@@ -39,10 +39,6 @@ java -jar -Dproxy.host="host" -Dproxy.port=port target\currency-converter-1.0-SN
  - Account information and user history is persisted in in-memory DB via JPA.
  - Very simple UI. No Javascript and minimal CSS.
 
-
-## Bugs
-1. Handling of badly formatted dates and conversion amount is not user friendly. Input such as 'abc' will cause to display long error message as a result of an exception.
-
 ## To Do
 1. Add more testing.
 2. Add CSS and Javascript for better UX.
