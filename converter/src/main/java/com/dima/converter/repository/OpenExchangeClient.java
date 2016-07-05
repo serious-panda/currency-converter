@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.cache.annotation.CacheKey;
+import javax.cache.annotation.CacheResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -50,15 +51,17 @@ public class OpenExchangeClient implements RatesRepository {
     private static final String LIVE_URL = BASE_URL + LATEST + APP_ID;
     private static final String HISTORICAL_URL = BASE_URL + HISTORICAL + APP_ID;
 
-    @Cacheable(value="liveRates", unless = "!#result.isEmpty()")
+
+    @Cacheable(value="liveRates", unless = "#result.isEmpty()")
     public Map<String, Double> getLive(){
         return getRates(LIVE_URL + appId);
     }
 
-    @Cacheable(value = "historicalRates", unless = "!#result.isEmpty()")
+
+    @Cacheable(value = "historicalRates", unless = "#result.isEmpty()")
     public Map<String, Double> getHistorical(@CacheKey LocalDate date){
 
-        return getRates(String.format(HISTORICAL_URL + appId, date.getYear(), date.getMonth(), date.getDayOfMonth()));
+        return getRates(String.format(HISTORICAL_URL + appId, date.getYear(), date.getMonthValue(), date.getDayOfMonth()));
     }
 
     private Map<String, Double> getRates(String url){

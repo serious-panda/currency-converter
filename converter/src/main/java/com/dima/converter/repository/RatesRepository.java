@@ -5,7 +5,9 @@ import java.util.Map;
 
 public interface RatesRepository {
 
+
     Map<String, Double> getLive();
+
 
     Map<String, Double> getHistorical(LocalDate date);
 

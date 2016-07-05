@@ -79,12 +79,14 @@
             <th>Date</th>
         </tr>
         <tr th:each="entry : ${history}">
-            <td th:text="${#dates.format(entry.timestamp, 'dd/MMM/yyyy HH:mm')}"></td>
+
+            <td th:text="${#temporals.format(entry.timestamp, 'dd/MMM/yyyy HH:mm')}"></td>
             <td th:text="${#numbers.formatDecimal(entry.amount, 0, 'COMMA', 2, 'POINT')} + ' ' +
                             ${entry.base} + ' = ' +
                             ${#numbers.formatDecimal(entry.result, 0, 'COMMA', 2, 'POINT')}  + ' ' +
                             ${entry.quote}"></td>
-            <td th:if="${entry.date != null}" th:text="'On ' + ${#dates.format(entry.date, 'dd/MMM/yyyy')}">Live</td>
+            <td th:if="${entry.date != null}" th:text="'On ' + ${#temporals.format(entry.date, 'dd/MMM/yyyy')}">...</td>
+            <td th:if="${entry.date == null}" th:text="Live">...</td>
         </tr>
     </table>
 </div>

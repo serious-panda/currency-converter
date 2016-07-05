@@ -85,7 +85,7 @@ public class HomeController implements ResourceLoaderAware {
         } catch (SymbolNotSupportedException e){
             bindingResult.reject("bad.symbol", "Symbol not supported.");
         } catch (ConversionServiceException e) {
-            bindingResult.reject("service.error", "Service not available. Please try again later.");
+            bindingResult.reject("service.error", "Service is not available. Please try again later.");
         }
         return HOME_VIEW;
     }
